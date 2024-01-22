@@ -1,0 +1,12 @@
+#### ZSH
+sudo apt install zsh
+sudo apt install powerline fonts-powerline
+sudo curl -L https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sh
+cp .zshrc ~/.zshrc
+
+sudo nano ~/.bashrc
+затем добавьте строку под верхней частью файла
+exec zsh
+
+#### Doker
+
