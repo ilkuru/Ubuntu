@@ -1,5 +1,5 @@
 #### ZSH
-sudo apt install zsh
+sudo apt install zsh zsh-completions
 sudo apt install powerline fonts-powerline
 sudo curl -L https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sh
 cp .zshrc ~/.zshrc
