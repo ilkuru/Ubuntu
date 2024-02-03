@@ -1,0 +1,28 @@
+MBR - master boot record участок в начале диска на 512b зарезервировн
+для загрузчика OS
+
+BIOS - MBR
+UEFI - GPT
+
+dd if=/sda of=/root/backup.mbr bs=512 count=1 # скопировать MRB 512b 1 сектор
+
+
+# LILO
+/etc/lilo.conf
+boot = /dev/disk/by-id/ # необходимо указать раздел с MBR
+lilo #обновить конфиг
+
+# GRUB
+
+grub-install /dev/sda #устанавливает GRUB
+/boot/grub/grub.conf # не редактируется генерируется скриптом /etc/grub.d
+из /etc/default/grub
+
+/etc/grub.d
+10_linux и 30_uefi-firmware - отвечают за автом. поиск Linux ядер и остальных OS
+05_debian_theme # загрузка фона и цыетов
+40_custom и 41_custom # кастоиный
+update-grub #применяет настройки
+
+
+
