@@ -1,0 +1,125 @@
+# system & инициализация runlevel
+devfs - файлы при помощи которых можно обращаться к устройствам
+/dev - описание устройств работающих с байтами
+htop > /dev/null 2>&1 # отобразить процессы, ошибки отправить в null
+head -1 /dev/urandom > ~/test # отображает строку сгенерированную urandom
+
+Sysfs - файлы информации, какие устройства, вкл. выкл. они,
+какой производитель, какая модель и т.д:
+
+# Виртуальная файловая система выводит на уровень юзера информацию
+из ядра linux о присутствующих устройствах и драйверах монтируется в /sys
+
+divices/ - все устройства, зарег. в ядре;
+bus/ - перечень шин, для передачи между устройствами pci, usb и т.д;
+drivers/ - драйвера;
+blcok/ - каталог блочных устройств, носители информации;
+class/ - группировка устройств по классам;
+
+Procfs - Виртуальная файловая система монтируется в /proc
+иерархическое представление всех процессов в системе.
+
+pid/ - инф. о конкретном процессе;
+cpuinfo/ - сведенья о ЦПУ;
+devices/ - перечень настроенных устройств;
+mounts/ - смонтированные файловые системы;
+sys/ - доступная для редактирования информация о системе.
+
+# Вывод списка оборудования:
+lscpu - инф. о CPU
+lsmod - инф. о модулях ядра;
+lscpi - инф. об устройствах PCI;
+lspcmcia - инф. об устройствах PCMCIA;
+lsusb - инф. о шине USB; apt install usbutils
+lshal - база устройств HAL;
+lshw - детальная инф. о комплектующих
+
+#udev
+udevadm info -a -p /sys/class/net/ens33 # инф. о сетевой карте
+udevadm monitor --property --kernel #мониторинг ядра
+udevadm test /sys/block/sda # отображает события связанные с sda
+
+# Управление модулями ядра
+lsmod - инф. о модулях ядра;
+modinfo - инф. о конкретном модуле;
+rmmod - удаление модуля ядра
+insmod - установка модуля ядра
+modeprobe - деликатное удаление или добавление модулей
+
+# Загрузка системы
+BIOS/UEFI > MBR/GPT > LILO/GRUB > Linux Kernel > init - (среда польз.)
+dmesg - вывод сообщений ядра (все события ядра)
+cat /var/log/dmesg - информация 1 загрузки ядра
+boot/ - папка загрузки системы
+
+# система инициализации OS
+pstree # дерево процессов
+
+runlevel - Уровни выполнения по умолчанию
+0 - выключение
+1 - однопользовательский режим
+2 - debian/ubuntu по дефолту
+3 - RedHat/Suse по дефолту текстовый режим
+4 - WildCard (Программируемый режим)
+5 - RedHat/Suse GUI
+6 - перезагрузка
+
+/etc/init.d - директория инициализации (запуск скриптов служб при старте системы)
+ilya@test: /etc/init.d$ sudo ./cron stop
+ilya@test: /etc/init.d$ sudo ./cron start
+ilya@test: /etc/init.d$ sudo ./cron restart
+
+ilya@test: /etc$ ls -l | grep rc. # отобразить все c именем rc
+rc1.d, rc2.d rc3.d rc4.d rc5.d rc6.d # папки для старта уровня системы
+# S01cron - 'S' start службы 'K' остановить службу, '01', '02', '03' последовательность
+
+runleve - отобразить уровень загрузки системы.
+
+init - управление инициализации - старый тип
+Telinit - управление процессом init - во всех системах
+telinit 3 - переход на 3-й уровень системы без рестарта OS
+
+Wall - Broadcast message Вывод сообщения пользователям системы
+wall 'hello message'
+
+Halt - Выключение ПК
+Reboot - перезагрузка ПК
+Shutdown - запланированное выключение, перезагрузка и т.д.
+
+Service service_name start | stop | reload | restart | status
+
+# systemd & systemctl
+
+Unit - модули, которыми оперирует systemd:
+.service - службы
+.mount - точки монтирования
+.device - устройства
+.socket - сокеты
+
+/usr/lib/systemd - директория с юнитами по умолчанию
+/etc/systemd - директория с управляемыми юнитами
+
+systemctl list-units - показывает все запущенные юниты.
+systemctl --failed - юниты которые не запустились
+systemctl list-units --type=service - только сервисы
+systemctl list-units --type=target - используемые таргеты
+systemctl isolate reeboot.target - как в Telinit runlevel:
+0 - poweroff.target # выключение
+1 - rescue.target #однопользовательсий режим
+2, 4 - multi-user.target #Настраеваемый режим
+3 - multi-user.target # многопольз. режим
+5 - graphical.target #Графика
+6 - reboot.target # Перезагрузка
+systemctl set-default -f multi-user.target - таргет по дефолту
+
+systemctl reboot | poweroff | suspend | hibernate | hybrid-sleep # питание ПК
+
+Journald - служба журналирования
+journalctl -f # вывести события в режиме реал тайм
+journalctl -n 10 #последние 10 событий
+
+systemctl name_unit start | stop | status | restart | reload
+
+Upstart Процессы инициализации и управления системой Ubuntu desktop
+initctl - утилита управления upstart
+initctl - check-config # проверяет конфигурацию конфликтов
