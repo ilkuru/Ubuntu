@@ -1,0 +1,11 @@
+#Lib библиотеки в Linux
+
+/lib и /usr/lib/ - расположение
+/etc/ld.so.conf - конфиг. файл в котором указаны библиотеки
+include /etc/ld.so.conf.d/*.conf
+
+ldconfig # обновить cache lib
+ldd /bin/ls # показать какие библиотеки илспользует бинарник ls
+
+export LD_LIBRARY_PATH=/opt/soft/lib указать путь до библиотек которые нужно установить
+ldconfig # обновить cache lib

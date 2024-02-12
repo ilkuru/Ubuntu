@@ -1,0 +1,59 @@
+dpkg - утилита управления пакетами в Debian сис
+-l - перечень пакетов в системе
+-L - перечень файлов пакета
+-s - информация о статусе пакета
+-S - поиск пакета, содержащего данный файл
+-i - установка пакета
+-I - информация о пакете в файле
+-r - простое удаление
+-P - удаление пакета вместе с конфигурационными файлами
+
+dpkg-reconfigure - переконфигурация пакета
+
+apt - утилита управления пакетами в Debian сис
+apt-get - скачивание и установки пакетов;
+apt-cache - поиск пакетов
+aptitude - управление пакатами с опцией псевдографики
+
+apt-get update - обновляет список репоз.
+apt-get upgrade - обновить установл пакеты
+apt-get install - установка
+apt-get remove - удаление
+apt-get autoremove - удаление пустых зависимостей
+
+apt-cache search - поиск по имени
+apt-cache show - информация о покете
+apt-cache depends - поиск от кого зависит пакет
+apt-cache rdepends - кто зависит от пакет
+
+apt-get install aptitude
+aptitude - управление пакатами с опцией псевдографики
+
+/etc/apt/source.list - репозитории
+
+rpm и yum - утилита управления пакетами в Red Hat сис
+
+rpm -iv packet_name # установка пакнта с отображением что происходит
+rpm -e packet_name # удаление пакета
+rpm -e packet_name # проверить ключи
+rpm -Vv packet_name # показать состояние пакета ......... обозначают что все ок
+если S - это размер, 5 - md5, T-время редактирования.
+rpm -q packet_name - ифо о пакете
+rpm -qi packet_name - подробная информация о пакете
+rpm -qd packet_name - документация о пакете
+rpm -qd packet_name - показать все пакеты packet_name
+
+rpm2cpio - перепаковать в архивный пакет для других OS
+rpm2cpio packet_name.rpm > packet_name.cpio
+
+yum --help
+yum install packet_name - установать
+yum remove packet_name - удалить
+/etc/yum.repos.d/ - репозитории yum
+yum upgrade - обновить пакеты
+yumdownloader packet_name - просто скачать пакет с зависимостями
+yum search packet_name - найти пакет.
+
+
+
+
