@@ -142,3 +142,26 @@ bzip2 file_name.bz2 # разжимает исходник
 tar cvf archive.tar folder_name # cvf - create verbose folder имя_архива. folder_name то что архивир.
 tar cvfz archive.tar.gz folder_name # сжать архив gzip-пом
 tar xvf archive.tar #распаковать архив
+
+# перенаправление выводов данных
+stdin 0 - ввод
+stdout 1 - вывод
+stderr 2 - вывод ошибки
+
+> - передать в
+>> - дописать в
+< - взять из
+| - (конвеер) отправить следующей команде
+
+Tee - отправить в файл и на страндартный вывод
+Xargs - построчно передать на ввод команде
+
+ls > list.txt # перезаписывает list.txt выводом ls
+ls >> list.txt #Добавляет к list.txt выводом ls
+ls bob 2> result.txt # вывод ошибки в файл result.txt
+ls bob > result.txt 2> error.txt
+ls | grep r # передать вывод в grep,grep ищет симв. 'r' и выводит
+ls | tee result.txt # вывод на экран и в файл result.txt
+
+find . -name '*.txt' | xargs rm -f # найти и удалить все файлы txt передавая через | построчно в xargs
+
