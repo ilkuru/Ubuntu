@@ -38,3 +38,8 @@ fgrep c$ file_name # найдет не как 'c' в конце строки, а
 sed -e 's/oo/aa/' file_name # заменяет в выводе все 'oo' на 'aa'
 sed -e 's/oo/aa/' file_name > new_file_name # заменяет в выводе все 'oo' на 'aa' и сохраняет в новый файл
 sed -re 's/ (B|b)/C/' file_name # '-r' подключить регулярные выраж.' ' с начала строки B или b заменить на 'C'
+
+
+
+
+
