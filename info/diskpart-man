@@ -28,17 +28,22 @@ fdisk -l  # отобразить диски и разделы, через ID
 fdisk /dev/sdb - выбрать диск
 
 mkfs.ext4 /dev/sdb5 - отфортатировать выбранный раздел в ext4
-mkswap - утилита создания раздела или файла подкачки
+mkfs -t xfs -f /dev/sdb1 # отфарматировать в файл. сист. xfs '-f' принудительно
+mkfs -t ext2 -f /dev/sdb1  \
+mkfs.ext2 /dev/sdb1         - отфортатировать выбранный раздел в ext2
+mke2fs /dev/sdb1           /
 
+fdisk - создать раздел swap
+mkswap - утилита создания раздела или файла подкачки
+mkswap /dev/sdb2 # создать swap на разделe
 swapon и swapoff - работы с разделом файла подкачки.
+swapon /dev/sdb2 # включить swap на разделе
+swapoff /dev/sdb2 # выключить swap на разделе
 swapon -s # показать файл подкачки
 
 /etc/fstab - конфиг. файл, отвечающий за монтирование файловых систем
 
 blkid - показывает UUID разделов
-
-mount /dev/sdb5 /mnt ... /mounted # монтирует раздел sdb5 в папку /mnt или в /mounted
-umount /mounted # отмонтирует раздел
 
 LVM - система управления томами для Linux http://help.ubuntu.ru/wiki/lvm
 
@@ -51,5 +56,93 @@ vgcreate vg_name /dev/sdb1 /dev/sdb2 # создает volume group имя vg_nam
 lvcreate -n lv_name -L 2G vg_name # создает logical volume lv_name 2GB в группе vg_name
 mkfs.ext4 /dev/vg_name/lv_name # отфортатировать выбранный раздел в ext4
 lvresize -L 4G vg_name/lv_name # увеличивает раздел до 4GB
+
+df -h # показать размер инфо. дисков
+
+du -h /home/user_name # взвесить папку с вложенными папками
+du -h --summrize /home/user_name # взвесить папку с без вложенн
+
+#проверка фаловой системы
+манипуляции нужно проводить с отмантированным раделом
+umount /mnt/hard
+
+fsck /dev/sdb1 # проверка файловой системы
+fsck -t ext4 /dev/sdb1 # проверка файловой системы с указанием типа
+
+xfs_check /dev/sdb1 # проверяет разд. с файл. систем. xfs
+xfs_repair /dev/sdb1 # чинит xfs
+xfs_info /dev/sdb1 # инфо
+xfs_metadump /dev/sdb1 file_name_dump # резервная копия раздела
+
+# debugfs :help - инфо - утилита отладки на низком уровне
+debugfs -w /dev/sdb1 # выбрать раздел с '-w' записью
+debugfs: ls # отобразить содержимое
+debugfs: lsdel # отобразить удалунные inode
+debugfs: undel <> file_name # востановить удаленный файл
+
+# dumpe2fs - дамп-вывод информации о файловой системе
+dumpe2fs /dev/sdb1 > output.txt # вывести в файл
+less output.txt # отобразить постранич.
+dumpe2fs /dev/sdb1 | grep features # отобразить опции файл. сист.
+
+#tune2fs - утилита настройки параметров файловой системы
+tune2fs -O has_journl /dev/sdb1 # добавить к файл. сист. опцию журналирования
+tune2fs -O ^has_journl /dev/sdb1 # удалить опцию журналирования
+
+# mount / umount
+mount # покажет что куда смонтировано
+mount устройство точка_монтирования
+mount /dev/sdb5 /mnt ... /mounted # монтирует раздел sdb5 в папку /mnt или в /mounted
+umount устройство или точка_монтирования
+umount /dev/sdb5 # отмонтирует раздел
+umount /mnt/mounted # отмонтирует точку
+
+/etc/fstab - конфиг. файл, отвечающий за автом. монтирование файловых систем
+<file system> - файл. сист.  прим: /dev/disk/by-id/dm-uuid-LVM-12323 иди UUID=
+<mount point> - точка монтирования. прим: /, /etc, /boot и т.д
+<type> - тип файл. сист. прим: ext4, xfs, т.д, auto - определить файл. систему
+<options> - опции. прим: errors=remount-ro (при ошибках перемонт.) defaults (Доступно чтение и запись, монтируеться автоматом, исполняемые файла, недоступна пользователю)
+<dump> - сохранять файлы авто. при отключении OS. прим: 0
+<pass> - порядок проверки файл сист. 1 - корневая, 2 -у всех, 0 у съемных. прим: 1
+
+/dev/disk/by-id/dm-uuid-LVM-FG14bC6LEkbZ3iEbLom7bJE64Bg4QzlYCma2Cq3pIU9G5PXdiuBsjuWNHr4aliht / ext4 defaults 0 1
+/dev/disk/by-uuid/5163b540-4b33-478b-9e77-03912243570c /boot ext4 defaults 0 1
+/swap.img       none    swap    sw      0       0
+#разделитель 'tab'
+/dev/sdb1   /mtn/mounted    auto   rw,user,auto,noexec 0   2 # 'rw' чтение-запись, 'user' пользователи могут mount umount, 'auto' монтировать при старте, 'noexec' запретить запуст исполняем. файлов
+UUID=e12313123...  /mtn/mounted    auto   rw,user,auto,noexec 0   2 # 'rw' чтение-запись, 'user' пользователи могут mount umount, 'auto' монтировать при старте, 'noexec' запретить запуст исполняем. файлов
+
+mount /mtn/mounted # подключить
+umount /mtn/mounted # отключить
+
+blkid /dev/sdb1 # показать UUID устройства
+
+blkid # посмотреть устройства
+mount /dev/sr0 /media/cdrom # смонтировать CDrom
+#монтирование CD в fstab
+/dev/sr0    /media/cdrom    udf,cdfs,iso9660    user,noauto,exec,ro 0   0
+
+# для USB предварительно отмантировать и выполнить eject
+
+#quota
+apt install qouta
+fstab: необходимо монтироватьс с параметром usrquota, grpqouta
+/dev/sdb1   /mnt/hard   auto    rw,user,auto,usrquota,grpquota  0   0
+quotaoff /mnt/hard # отключает крвоты
+quotacheck -cug /mnt/hard # 'c' создать квоты для, 'u' пользов., 'g' группы
+edquota -u user_name # задать квоты для user_name, 'g' для группы
+blocks - показывает сколько 1kb блоков уже занято.
+soft - мягкая квота которую можно превысить на 7 дней
+Hard - жеская квота, нельзя привысить
+inodes - показывает сколько уже занято количество айноды
+inodes-soft - мягкая квота которую можно превысить на 7 дней
+
+edquota -t # изменить количество дней для soft и inodes-soft
+quotaon /mnt/hard # влч. крвоты
+repquota /mnt/hard # показывает у кого какие квоты и период soft
+warnquota # посылает отчеты превышения квоты
+
+
+
 
 
