@@ -1,0 +1,31 @@
+mysql> CREATE DATABASE testbase; # создать базу
+mysql> USE testbase; # подключиться к базе testbase
+mysql> CREATE TABLE new (brand VARCHAR(10), model VARCHAR(10), year YEAR, price INT); # создать таблицу new с полями brand параметры тип данных в таблице VARCHAR ограничения на (10) символов и т.д.
+mysql> SHOW TABLES; # отобразить таблицы в базе данных
+mysql> DESCRIBE new; # вывести содержитое таблицы
+
+# импорт из файла
+#new.txt
+KIA	CERATO	2014	3500000
+FORD	FOCUS	2015	4000000
+KIA	PICANTO	2017	9000000
+
+mysql --local-infile=1 -u root # запустить mysql с разпишением импортирования из file usr root
+mysql> USE testbase;
+mysql> LOAD DATA LOCAL INFILE "new.txt" INTO TABLE new; # Зарузить из new.txt в таблицу new
+mysql> SELECT * FROM new; # покажет содержимое таблицы new
+mysql> INSERT INTO new (brand, model, year) VALUES ('LADA', 'GRANTA', '2000') #добовить в таблицу new строку с параметрами
+mysql> DELETE FROM new WHERE model="GRANTA"; # удалить GRANTA из таблици new в столбце model
+
+mysql> SELECT model FROM new; # выбрать столбец model из new
+mysql> SELECT * FROM new WHERE brand="KIA"; #показать столбец brand из таб. new все записи с KIA
+mysql> SELECT * FROM new WHERE brand="KIA" AND year="2017" #brand из таб. new все записи с KIA и столбец year 2017
+mysql> SELECT model FROM new WHERE brand="KIA" AND year="2017" # только столбец с моделями KIA 2017 года
+
+mysql> UPDATE new SET model="KUGA" WHERE model="FOCUS"; # перезаписать запись в таблице new в столбце model FOCUS на KUGA
+mysql> SELECT * FROM new JOIN used ON new.brand = used.brand; #в таб. new солбец brand, Объеленить с таб. used столбец brand
+mysql> SELECT * FROM new ORDER BY brand; # отсортировать таблицу new по стболбцу brand
+
+
+
+
