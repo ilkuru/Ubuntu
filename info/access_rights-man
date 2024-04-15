@@ -1,3 +1,4 @@
+
 chown - установка владельца
 chgrp - установка группы владельца
 chmod - установка права доступа
@@ -81,3 +82,55 @@ ls -s /home/usr_name/file_name soft_link_name # создать мягкую сс
 /usr - все установленные пакеты ПО, бинарники файлы польз.;
 /srv - Данные для системных служб;
 /tmp - временные файлы;
+
+#user & group
+
+useradd #создать пользователя
+usermod #изменить свойства пользователь
+userdel #удалить пользователя
+
+/etc/passwd
+user_name:password:uid:gid:сведенья:домашняя_пака:оболочка
+games:x(пароль_в_shadow:5:60:games:/usr/sbin/nologin(без входа в систему)
+ilya:x:1000:1000:ilyas:/home/ilya:/bin/bash
+/etc/group
+name_group:password:gid:member_group
+ilya:x:1000:
+
+/etc/shadow
+user_name:password:время_пос_смены_пароля:мин_срок_дейст_пароля:max_срок_дейст_пароля:срок_предупре:время_
+с_истек_парол:срок_для_блокировки_пароля
+games:*(пароль_отключен_вход_залочен):19405:0:99999:7:::
+ilya:$y$j9T$NQOuWw.Ma9lz1MApsWd7l.$INlVHRQbMp7Uh5XpLavXMD3i71.zknB.PBcv7AzeK01:19654:0:99999:7:::
+debian-spamd:!(пароль_отключен_можно_разлочить):19567:0:99999:7:::
+!! - то, какой командой отключили пароль
+/etc/gshadow
+name_group:password:gid:member_group
+
+useradd #создать пользователя
+useradd -m -G sambashare user_name #создать пользователя c одноименной папкой в /home, добавить в группу sambashare
+passwd user_name #задать польз. пароль
+
+usermod -ag gpoup_name user_name # перезаписать группы польз. -aG добавить
+usermod -aG gpoup_name user_name # Добавить польз. в группу.
+usermod -L user_name # залочить пользователя
+usermod -U user_name # разлочить пользователя
+usermod -s -с 'comment'/bin/bash user_name # задать оболочку bash и коментарий к учетке
+
+userdel -r user_name # удалить польз. с домашней папкой
+
+groupadd #создать группу
+groupmod #изменить свойства группы
+groupdel #удалить группу
+chage # изменить свойства учетной записи
+
+groupadd gpoup_name #создать группу
+
+chage -l user_name # показать свойства пользователя
+chage -E 2024-07-09 gpoup_name #до какого срока активна учетка
+chage -E -1 gpoup_name #параметр -1 сбрасывает на default срок действия учетки\
+
+getent # утилита для работы с учетными данными и сервисами авторизации.
+getent passwd user_name # покажет данные пользователя
+
+getent group # для работы с группами
